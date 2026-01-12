@@ -1,4 +1,4 @@
-var user = "notAdmin";   // or "User"
+var user = "Admin";   // or "User"
 var isAdmin = (user === "Admin");
 
 
@@ -94,14 +94,51 @@ function resetHighlight(e) {
 
 function onEachFeature(feature, layer) {
 
-       const p = feature.properties;
+    layer.on("popupopen", function () {
+        window.activeLayer = layer; // store reference globally
+    });
 
+    const p = feature.properties;
     let popupContent;
 
     if (isAdmin) {
-        // Editable access for Admin User
         popupContent = `
-        <div style="min-width: 50vw">
+        <div>
+            <b>Plot:</b> ${p.Plot}<br>
+            <b>Size:</b> ${p.Size}<br>
+            <b>Status:</b> ${p.Status}<br><br>
+
+            <button class="edit-btn"
+                style="background:#2b7cff;color:white;border:none;padding:6px 12px;border-radius:4px;">
+                ✏️ EDIT
+            </button>
+        </div>`;
+    } else {
+        popupContent = `
+        <div>
+            <b>Plot:</b> ${p.Plot}<br>
+            <b>Size:</b> ${p.Size}<br>
+            <b>Status:</b> ${p.Status}
+        </div>`;
+    }
+
+    layer.bindPopup(popupContent);
+}
+
+
+
+
+document.addEventListener("click", function (e) {
+
+    if (!e.target.classList.contains("edit-btn")) return;
+
+    const layer = window.activeLayer;
+    if (!layer) return;
+
+    const p = layer.feature.properties;
+
+    const newPopupContent = `
+        <div>
             <b 
             style="text-align:center; text-transform: uppercase; font-size: 15px;">
             Plot : ${p.Plot}</b><br>
@@ -110,41 +147,29 @@ function onEachFeature(feature, layer) {
             Size : ${p.Size}</b><br><br>
             
             <b>Status:</b><br>
-            <input style="width:100%" class="edit-status" value="${p.Status ?? ''}"><br><br>
+            <input style="width:90%" class="edit-status" value="${p.Status ?? ''}"><br><br>
 
             <b>Price:</b><br>
-            <input style="width:100%" class="edit-price" value="${p.Price ?? ''}"><br><br>
+            <input style="width:90%" class="edit-price" value="${p.Price ?? ''}"><br><br>
 
             <b>Plot Type:</b><br>
-            <input style="width:100%" class="edit-type" value="${p.Plot_Type ?? ''}"><br><br>
+            <input style="width:90%" class="edit-type" value="${p.Plot_Type ?? ''}"><br><br>
 
             <b>Description:</b><br>
-            <textarea style="width:100%" class="edit-desc" rows="3">${p.Description ?? ''}</textarea><br><br>
+            <textarea style="width:90%" class="edit-desc" rows="3">${p.Description ?? ''}</textarea><br><br>
 
             <button class="save-btn" 
                 data-id="${p.Id}"
                 style="background:green;color:white;border:none;padding:6px 12px;border-radius:4px; display:block; margin:0 auto;">
                 💾 SAVE
             </button>
-        </div>`;
-    } else {
-        //READ ONLY Access for non Admin user
-        popupContent = `
-        <div style="min-width:180px">
-            <b>Plot:</b> ${p.Plot}<br>
-            <b>Size:</b> ${p.Size}<br>
-            <b>Status:</b> ${p.Status}
-        </div>`;
-    }
+        </div>
+    `;
 
-    layer.bindPopup(popupContent);
+    layer.closePopup();
+    layer.bindPopup(newPopupContent).openPopup();
+});
 
-    layer.on({
-        mouseover: highlightFeature,
-        mouseout: resetHighlight,
-        click: () => layer.openPopup()
-    });
-}
 
 
 
