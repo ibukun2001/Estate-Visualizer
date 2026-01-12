@@ -101,7 +101,7 @@ function onEachFeature(feature, layer) {
     if (isAdmin) {
         // Editable access for Admin User
         popupContent = `
-        <div style="min-width: 150px">
+        <div style="min-width: 50vw">
             <b 
             style="text-align:center; text-transform: uppercase; font-size: 15px;">
             Plot : ${p.Plot}</b><br>
