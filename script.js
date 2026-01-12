@@ -131,9 +131,9 @@ function onEachFeature(feature, layer) {
         //READ ONLY Access for non Admin user
         popupContent = `
         <div style="min-width:180px">
-            <b>Plot:</b> ${Plot}<br>
-            <b>Size:</b> ${Size}<br>
-            <b>Status:</b> ${Status}
+            <b>Plot:</b> ${p.Plot}<br>
+            <b>Size:</b> ${p.Size}<br>
+            <b>Status:</b> ${p.Status}
         </div>`;
     }
 
