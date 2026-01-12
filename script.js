@@ -1,4 +1,4 @@
-var user = "Admin";   // or "User"
+var user = "notAdmin";   // or "User"
 var isAdmin = (user === "Admin");
 
 
